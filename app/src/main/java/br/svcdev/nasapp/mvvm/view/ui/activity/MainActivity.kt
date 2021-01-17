@@ -1,8 +1,9 @@
-package br.svcdev.nasapp
+package br.svcdev.nasapp.mvvm.view.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import br.svcdev.nasapp.ui.main.MainFragment
+import br.svcdev.nasapp.R
+import br.svcdev.nasapp.mvvm.view.ui.fragment.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
