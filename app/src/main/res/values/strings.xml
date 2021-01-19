@@ -6,13 +6,17 @@
     <string name="photo_of_the_day">Photo of the day</string>
     <string name="search">Search</string>
     <string name="image_hint">Please click on the image to view the description</string>
+    <string name="fab">FAB</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>
 
     <!-- General Preferences -->
-    <string name="dark_theme_title">Dark theme</string>
-    <string name="dark_theme_summary">Enable or disable Dark theme</string>
-    <string name="fab">FAB</string>
+    <string name="dark_mode_title">Dark theme</string>
+    <string name="dark_mode_summary">Enable or disable Dark theme</string>
 
 </resources>

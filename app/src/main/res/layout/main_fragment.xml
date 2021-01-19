@@ -23,6 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
+                app:hintTextColor="@color/hint_text_color_selector"
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
                 app:endIconCheckable="true"
@@ -33,12 +34,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                style="@style/NASApp.TextInputLayout">
                 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_wikipedia"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:imeOptions="actionSearch"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -112,20 +114,20 @@
         android:layout_gravity="bottom"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:backgroundTint="@color/purple_500"
         app:fabAlignmentMode="center"
         app:fabAnimationMode="scale"
         app:hideOnScroll="true"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:navigationIcon="@drawable/ic_menu" />
+        app:navigationIcon="@drawable/ic_menu"
+        style="@style/NASApp.BottomAppBar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        android:backgroundTint="@color/teal_200"
+        android:backgroundTint="?colorSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottom_app_bar"
         app:srcCompat="@drawable/ic_add"
-        android:tint="#FFFFFF" />
+        style="@style/NASApp.FAB" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

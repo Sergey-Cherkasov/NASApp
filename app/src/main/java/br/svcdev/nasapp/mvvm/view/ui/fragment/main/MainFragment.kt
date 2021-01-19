@@ -1,22 +1,21 @@
 package br.svcdev.nasapp.mvvm.view.ui.fragment.main
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
-import br.svcdev.nasapp.mvvm.view.ui.activity.MainActivity
+import androidx.lifecycle.ViewModelProvider
 import br.svcdev.nasapp.R
 import br.svcdev.nasapp.mvvm.model.entity.NasaServerResponseData
 import br.svcdev.nasapp.mvvm.model.entity.PictureOfTheDayData
+import br.svcdev.nasapp.mvvm.view.ui.activity.MainActivity
 import br.svcdev.nasapp.mvvm.view.ui.fragment.bottomnavigationdrawer.BottomSheepFragment
 import br.svcdev.nasapp.mvvm.view.ui.fragment.settings.SettingsFragment
+import br.svcdev.nasapp.mvvm.view.ui.fragment.webview.WebViewFragment
 import br.svcdev.nasapp.mvvm.viewmodel.MainFragmentViewModel
+import br.svcdev.nasapp.util.toast.*
 import coil.api.load
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -32,16 +31,17 @@ class MainFragment : Fragment() {
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val viewModel: MainFragmentViewModel by lazy {
-        ViewModelProviders.of(this).get(MainFragmentViewModel::class.java)
+        ViewModelProvider(this).get(MainFragmentViewModel::class.java)
     }
     private var serverResponseData: NasaServerResponseData? = null
+    private val toast: IToast = Toast()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.getData().observe(this@MainFragment, {
+        viewModel.getData().observe(viewLifecycleOwner, {
             renderData(it)
         })
-        viewModel.getProgressState().observe(this@MainFragment, { isLoading ->
+        viewModel.getProgressState().observe(viewLifecycleOwner, { isLoading ->
             if (isLoading) {
                 showProgress()
             } else {
@@ -60,15 +60,17 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         input_layout.setEndIconOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://en.wikipedia.org/wiki/${et_wikipedia.text.toString()}")
-            })
+            searchTermInWiki(et_wikipedia.text.toString())
         }
         image_view.setOnClickListener {
             activity?.let {
                 BottomSheepFragment.newInstance(R.layout.bottom_sheet_layout, serverResponseData)
                     .show(it.supportFragmentManager, "IMG_DESCRIPTION")
             }
+        }
+        et_wikipedia.setOnEditorActionListener { _, _, _ ->
+            searchTermInWiki(et_wikipedia.text.toString())
+            true
         }
         setBottomAppBar(view)
     }
@@ -80,10 +82,10 @@ class MainFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.app_bar_favorites -> toast("Favorite")
+            R.id.app_bar_favorites -> toast.show(context, "Favorite")
             R.id.app_bar_settings -> activity?.supportFragmentManager
                 ?.beginTransaction()
-                ?.add(R.id.container, SettingsFragment())
+                ?.replace(R.id.container, SettingsFragment())
                 ?.addToBackStack(null)
                 ?.commit()
             android.R.id.home -> activity?.let {
@@ -103,7 +105,7 @@ class MainFragment : Fragment() {
                 val url = serverResponseData?.url
                 if (url.isNullOrEmpty()) {
                     //showError("Сообщение, что ссылка пустая")
-                    toast("Link is empty")
+                    toast.show(context, "Link is empty")
                 } else {
                     //showSuccess()
                     image_view.load(url) {
@@ -118,7 +120,7 @@ class MainFragment : Fragment() {
             }
             is PictureOfTheDayData.Error -> {
                 //showError(data.error.message)
-                toast(data.error.message)
+                toast.show(context, data.error.message)
             }
         }
     }
@@ -137,16 +139,22 @@ class MainFragment : Fragment() {
             } else {
                 isMain = true
                 bottom_app_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                bottom_app_bar.navigationIcon = ContextCompat.getDrawable(context, R.drawable.ic_menu)
+                bottom_app_bar.navigationIcon =
+                    ContextCompat.getDrawable(context, R.drawable.ic_menu)
                 bottom_app_bar.replaceMenu(R.menu.menu_bottom_app_bar)
                 fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add))
             }
         }
     }
 
-    private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    private fun searchTermInWiki(s: String) {
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(
+                R.id.container,
+                WebViewFragment.newInstance("https://en.wikipedia.org/wiki/$s")
+            )?.addToBackStack(null)
+            ?.commit()
     }
 
     private fun hideProgress() {
@@ -155,13 +163,6 @@ class MainFragment : Fragment() {
 
     private fun showProgress() {
         progress_bar.visibility = ProgressBar.VISIBLE
-    }
-
-    private fun Fragment.toast(s: String?) {
-        Toast.makeText(context, s, Toast.LENGTH_SHORT).apply {
-            setGravity(Gravity.BOTTOM, 0, 250)
-            show()
-        }
     }
 
 }
