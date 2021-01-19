@@ -5,19 +5,14 @@
     <string name="find_in_wikipedia">Find in Wikipedia</string>
     <string name="photo_of_the_day">Photo of the day</string>
     <string name="search">Search</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="image_hint">Please click on the image to view the description</string>
+
+    <!-- Preference Titles -->
+    <string name="general_header">General</string>
+
+    <!-- General Preferences -->
+    <string name="dark_theme_title">Dark theme</string>
+    <string name="dark_theme_summary">Enable or disable Dark theme</string>
+    <string name="fab">FAB</string>
+
 </resources>
