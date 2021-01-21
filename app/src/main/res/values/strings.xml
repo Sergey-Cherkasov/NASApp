@@ -18,5 +18,11 @@
     <!-- General Preferences -->
     <string name="dark_mode_title">Dark theme</string>
     <string name="dark_mode_summary">Enable or disable Dark theme</string>
+    <string name="solar_system">Solar system</string>
+    <string name="list_of_asteroids">List of asteroids</string>
+    <string name="earth_image">Earth image</string>
+    <string name="mars_image">Mars image</string>
+    <string name="_1">На экран 1</string>
+    <string name="_2">На экран 2</string>
 
 </resources>
