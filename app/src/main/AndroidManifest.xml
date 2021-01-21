@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NASApp">
-        <activity android:name="br.svcdev.nasapp.mvvm.view.ui.activity.MainActivity">
+        <activity android:name="br.svcdev.nasapp.mvvm.view.ui.activity.MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
