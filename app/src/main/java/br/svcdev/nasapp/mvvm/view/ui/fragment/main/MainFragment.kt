@@ -13,6 +13,7 @@ import br.svcdev.nasapp.mvvm.model.entity.PictureOfTheDayData
 import br.svcdev.nasapp.mvvm.view.ui.activity.MainActivity
 import br.svcdev.nasapp.mvvm.view.ui.fragment.bottomnavigationdrawer.BottomSheepFragment
 import br.svcdev.nasapp.mvvm.view.ui.fragment.settings.SettingsFragment
+import br.svcdev.nasapp.mvvm.view.ui.fragment.solarspace.SolarSpaceFragment
 import br.svcdev.nasapp.mvvm.view.ui.fragment.webview.WebViewFragment
 import br.svcdev.nasapp.mvvm.viewmodel.MainFragmentViewModel
 import br.svcdev.nasapp.util.toast.*
@@ -60,7 +61,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         input_layout.setEndIconOnClickListener {
-            searchTermInWiki(et_wikipedia.text.toString())
+            openFragment(WebViewFragment
+                .newInstance("https://en.wikipedia.org/wiki/${et_wikipedia.text.toString()}"))
         }
         image_view.setOnClickListener {
             activity?.let {
@@ -68,8 +70,8 @@ class MainFragment : Fragment() {
                     .show(it.supportFragmentManager, "IMG_DESCRIPTION")
             }
         }
-        et_wikipedia.setOnEditorActionListener { _, _, _ ->
-            searchTermInWiki(et_wikipedia.text.toString())
+        et_wikipedia.setOnEditorActionListener { _, _, _ -> openFragment(WebViewFragment
+            .newInstance("https://en.wikipedia.org/wiki/${et_wikipedia.text.toString()}"))
             true
         }
         setBottomAppBar(view)
@@ -82,17 +84,13 @@ class MainFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.app_bar_solar_system -> openFragment(SolarSpaceFragment())
             R.id.app_bar_favorites -> toast.show(context, "Favorite")
-            R.id.app_bar_settings -> activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(R.id.container, SettingsFragment())
-                ?.addToBackStack(null)
-                ?.commit()
+            R.id.app_bar_settings -> openFragment(SettingsFragment())
             android.R.id.home -> activity?.let {
                 BottomSheepFragment.newInstance(R.layout.bottom_navigation_drawer_fragment).show(
                     it.supportFragmentManager, "tag"
                 )
-//                BottomSheepFragment().show(it.supportFragmentManager, "tag")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -109,7 +107,7 @@ class MainFragment : Fragment() {
                 } else {
                     //showSuccess()
                     image_view.load(url) {
-                        lifecycle(this@MainFragment)
+                        lifecycle(viewLifecycleOwner)
                         error(R.drawable.ic_load_error)
                         placeholder(R.drawable.ic_no_photo)
                     }
@@ -147,13 +145,11 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun searchTermInWiki(s: String) {
+    private fun openFragment(fragment: Fragment) {
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.replace(
-                R.id.container,
-                WebViewFragment.newInstance("https://en.wikipedia.org/wiki/$s")
-            )?.addToBackStack(null)
+            ?.replace(R.id.container, fragment)
+            ?.addToBackStack(null)
             ?.commit()
     }
 
