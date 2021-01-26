@@ -42,13 +42,6 @@ class MainFragment : Fragment() {
         viewModel.getData().observe(viewLifecycleOwner, {
             renderData(it)
         })
-        viewModel.getProgressState().observe(viewLifecycleOwner, { isLoading ->
-            if (isLoading) {
-                showProgress()
-            } else {
-                hideProgress()
-            }
-        })
     }
 
     override fun onCreateView(
@@ -111,10 +104,12 @@ class MainFragment : Fragment() {
                         error(R.drawable.ic_load_error)
                         placeholder(R.drawable.ic_no_photo)
                     }
+                    hideProgress()
                 }
             }
             is PictureOfTheDayData.Loading -> {
                 //showLoading()
+                showProgress()
             }
             is PictureOfTheDayData.Error -> {
                 //showError(data.error.message)
@@ -146,15 +141,15 @@ class MainFragment : Fragment() {
     }
 
     private fun openFragment(fragment: Fragment) {
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.container, fragment)
-            ?.addToBackStack(null)
-            ?.commit()
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun hideProgress() {
-        progress_bar.visibility = ProgressBar.INVISIBLE
+        progress_bar.visibility = ProgressBar.GONE
     }
 
     private fun showProgress() {

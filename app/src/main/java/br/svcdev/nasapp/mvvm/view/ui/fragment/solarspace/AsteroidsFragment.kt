@@ -33,7 +33,7 @@ class AsteroidsFragment : Fragment() {
     private fun renderData(data: NeoAsteroidData) {
         when (data) {
             is NeoAsteroidData.Success -> {
-                asteroid_progress_bar.visibility = ProgressBar.INVISIBLE
+                asteroid_progress_bar.visibility = ProgressBar.GONE
                 serverResponseData.clear()
                 serverResponseData.addAll(data.serverResponseData.objects)
                 adapter = AsteroidsRVAdapter(serverResponseData)
@@ -58,7 +58,5 @@ class AsteroidsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         asteroid_recycler_view.layoutManager = LinearLayoutManager(context)
-//        adapter = AsteroidsRVAdapter(serverResponseData)
-//        recycler_view.adapter = adapter
     }
 }

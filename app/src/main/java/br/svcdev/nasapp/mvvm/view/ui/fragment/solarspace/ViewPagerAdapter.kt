@@ -10,7 +10,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) :
     companion object {
         private const val EARTH_FRAGMENT = 0
         private const val MARS_FRAGMENT = 1
-        private const val WEATHER_FRAGMENT = 2
+        private const val ASTEROIDS_FRAGMENT = 2
     }
 
     private val fragments = listOf(EarthFragment(), MarsFragment(), AsteroidsFragment())
@@ -21,7 +21,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) :
         return when(position) {
             EARTH_FRAGMENT -> fragments[EARTH_FRAGMENT]
             MARS_FRAGMENT -> fragments[MARS_FRAGMENT]
-            WEATHER_FRAGMENT -> fragments[WEATHER_FRAGMENT]
+            ASTEROIDS_FRAGMENT -> fragments[ASTEROIDS_FRAGMENT]
             else -> fragments[EARTH_FRAGMENT]
         }
     }
@@ -30,7 +30,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) :
         return when(position) {
             EARTH_FRAGMENT -> "Earth"
             MARS_FRAGMENT -> "Mars"
-            WEATHER_FRAGMENT -> "Weather"
+            ASTEROIDS_FRAGMENT -> "Asteroids"
             else -> "Earth"
         }
     }
