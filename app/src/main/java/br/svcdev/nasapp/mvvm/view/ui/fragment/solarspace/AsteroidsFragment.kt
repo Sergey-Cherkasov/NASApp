@@ -8,6 +8,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import br.svcdev.nasapp.R
 import br.svcdev.nasapp.mvvm.model.entity.NearEarthObject
 import br.svcdev.nasapp.mvvm.model.entity.NeoAsteroidData
@@ -33,7 +34,7 @@ class AsteroidsFragment : Fragment() {
     private fun renderData(data: NeoAsteroidData) {
         when (data) {
             is NeoAsteroidData.Success -> {
-                asteroid_progress_bar.visibility = ProgressBar.INVISIBLE
+                asteroid_progress_bar.visibility = ProgressBar.GONE
                 serverResponseData.clear()
                 serverResponseData.addAll(data.serverResponseData.objects)
                 adapter = AsteroidsRVAdapter(serverResponseData)
@@ -58,7 +59,8 @@ class AsteroidsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         asteroid_recycler_view.layoutManager = LinearLayoutManager(context)
-//        adapter = AsteroidsRVAdapter(serverResponseData)
-//        recycler_view.adapter = adapter
+        asteroid_recycler_view.setOnScrollChangeListener { _, _, dy, _, _ ->
+            asteroid_header.isSelected = asteroid_recycler_view.canScrollVertically(-1)
+        }
     }
 }

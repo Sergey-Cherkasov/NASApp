@@ -12,12 +12,6 @@ import kotlinx.android.synthetic.main.asteroids_rv_item.view.*
 class AsteroidsRVAdapter(private val asteroids: List<NearEarthObject>) :
     RecyclerView.Adapter<AsteroidsRVAdapter.ViewHolder>() {
 
-//    private var asteroids: List<NearEarthObject> = listOf()
-//        set(value) {
-//            field = value
-//            notifyDataSetChanged()
-//        }
-
     inner class ViewHolder(containerView: View) :
         RecyclerView.ViewHolder(containerView) {
         fun bind(asteroid: NearEarthObject) {
