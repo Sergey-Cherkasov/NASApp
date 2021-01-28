@@ -30,7 +30,6 @@ class MainFragment : Fragment() {
         private var isMain = true
     }
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val viewModel: MainFragmentViewModel by lazy {
         ViewModelProvider(this).get(MainFragmentViewModel::class.java)
     }
@@ -57,6 +56,7 @@ class MainFragment : Fragment() {
             openFragment(WebViewFragment
                 .newInstance("https://en.wikipedia.org/wiki/${et_wikipedia.text.toString()}"))
         }
+        image_view.alpha = 0f
         image_view.setOnClickListener {
             activity?.let {
                 BottomSheepFragment.newInstance(R.layout.bottom_sheet_layout, serverResponseData)
@@ -94,25 +94,23 @@ class MainFragment : Fragment() {
             is PictureOfTheDayData.Success -> {
                 serverResponseData = data.serverResponseData
                 val url = serverResponseData?.url
+                hideProgress()
                 if (url.isNullOrEmpty()) {
-                    //showError("Сообщение, что ссылка пустая")
                     toast.show(context, "Link is empty")
                 } else {
-                    //showSuccess()
                     image_view.load(url) {
                         lifecycle(viewLifecycleOwner)
                         error(R.drawable.ic_load_error)
                         placeholder(R.drawable.ic_no_photo)
                     }
-                    hideProgress()
+                    image_view.animate()
+                        .alpha(1f).duration = 3000
                 }
             }
             is PictureOfTheDayData.Loading -> {
-                //showLoading()
                 showProgress()
             }
             is PictureOfTheDayData.Error -> {
-                //showError(data.error.message)
                 toast.show(context, data.error.message)
             }
         }
