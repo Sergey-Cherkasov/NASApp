@@ -13,6 +13,7 @@ import br.svcdev.nasapp.mvvm.model.entity.PictureOfTheDayData
 import br.svcdev.nasapp.mvvm.view.ui.activity.MainActivity
 import br.svcdev.nasapp.mvvm.view.ui.fragment.bottomnavigationdrawer.BottomSheepFragment
 import br.svcdev.nasapp.mvvm.view.ui.fragment.settings.SettingsFragment
+import br.svcdev.nasapp.mvvm.view.ui.fragment.solarspace.SolarSpaceFragment
 import br.svcdev.nasapp.mvvm.view.ui.fragment.webview.WebViewFragment
 import br.svcdev.nasapp.mvvm.viewmodel.MainFragmentViewModel
 import br.svcdev.nasapp.util.toast.*
@@ -29,7 +30,6 @@ class MainFragment : Fragment() {
         private var isMain = true
     }
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val viewModel: MainFragmentViewModel by lazy {
         ViewModelProvider(this).get(MainFragmentViewModel::class.java)
     }
@@ -40,13 +40,6 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel.getData().observe(viewLifecycleOwner, {
             renderData(it)
-        })
-        viewModel.getProgressState().observe(viewLifecycleOwner, { isLoading ->
-            if (isLoading) {
-                showProgress()
-            } else {
-                hideProgress()
-            }
         })
     }
 
@@ -60,16 +53,18 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         input_layout.setEndIconOnClickListener {
-            searchTermInWiki(et_wikipedia.text.toString())
+            openFragment(WebViewFragment
+                .newInstance("https://en.wikipedia.org/wiki/${et_wikipedia.text.toString()}"))
         }
+        image_view.alpha = 0f
         image_view.setOnClickListener {
             activity?.let {
                 BottomSheepFragment.newInstance(R.layout.bottom_sheet_layout, serverResponseData)
                     .show(it.supportFragmentManager, "IMG_DESCRIPTION")
             }
         }
-        et_wikipedia.setOnEditorActionListener { _, _, _ ->
-            searchTermInWiki(et_wikipedia.text.toString())
+        et_wikipedia.setOnEditorActionListener { _, _, _ -> openFragment(WebViewFragment
+            .newInstance("https://en.wikipedia.org/wiki/${et_wikipedia.text.toString()}"))
             true
         }
         setBottomAppBar(view)
@@ -82,17 +77,13 @@ class MainFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.app_bar_solar_system -> openFragment(SolarSpaceFragment())
             R.id.app_bar_favorites -> toast.show(context, "Favorite")
-            R.id.app_bar_settings -> activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(R.id.container, SettingsFragment())
-                ?.addToBackStack(null)
-                ?.commit()
+            R.id.app_bar_settings -> openFragment(SettingsFragment())
             android.R.id.home -> activity?.let {
                 BottomSheepFragment.newInstance(R.layout.bottom_navigation_drawer_fragment).show(
                     it.supportFragmentManager, "tag"
                 )
-//                BottomSheepFragment().show(it.supportFragmentManager, "tag")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -103,23 +94,23 @@ class MainFragment : Fragment() {
             is PictureOfTheDayData.Success -> {
                 serverResponseData = data.serverResponseData
                 val url = serverResponseData?.url
+                hideProgress()
                 if (url.isNullOrEmpty()) {
-                    //showError("Сообщение, что ссылка пустая")
                     toast.show(context, "Link is empty")
                 } else {
-                    //showSuccess()
                     image_view.load(url) {
-                        lifecycle(this@MainFragment)
+                        lifecycle(viewLifecycleOwner)
                         error(R.drawable.ic_load_error)
                         placeholder(R.drawable.ic_no_photo)
                     }
+                    image_view.animate()
+                        .alpha(1f).duration = 3000
                 }
             }
             is PictureOfTheDayData.Loading -> {
-                //showLoading()
+                showProgress()
             }
             is PictureOfTheDayData.Error -> {
-                //showError(data.error.message)
                 toast.show(context, data.error.message)
             }
         }
@@ -147,18 +138,16 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun searchTermInWiki(s: String) {
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(
-                R.id.container,
-                WebViewFragment.newInstance("https://en.wikipedia.org/wiki/$s")
-            )?.addToBackStack(null)
-            ?.commit()
+    private fun openFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun hideProgress() {
-        progress_bar.visibility = ProgressBar.INVISIBLE
+        progress_bar.visibility = ProgressBar.GONE
     }
 
     private fun showProgress() {

@@ -24,5 +24,8 @@
     <string name="mars_image">Mars image</string>
     <string name="_1">На экран 1</string>
     <string name="_2">На экран 2</string>
+    <string name="swipe1">Swipe1</string>
+    <string name="swipe2">Swipe2</string>
+    <string name="swipe3">Swipe3</string>
 
 </resources>
