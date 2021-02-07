@@ -14,13 +14,15 @@ import br.svcdev.nasapp.R
 import br.svcdev.nasapp.mvvm.model.entity.NearEarthObject
 import br.svcdev.nasapp.mvvm.model.entity.NeoAsteroidData
 import br.svcdev.nasapp.mvvm.view.adapter.AsteroidsRVAdapter
+import br.svcdev.nasapp.mvvm.view.adapter.IAsteroidsRVItemClickListener
 import br.svcdev.nasapp.mvvm.view.adapter.IOnStartDragListener
 import br.svcdev.nasapp.mvvm.view.adapter.ItemTouchHelperCallback
+import br.svcdev.nasapp.mvvm.view.ui.fragment.webview.WebViewFragment
 import br.svcdev.nasapp.mvvm.viewmodel.AsteroidsFragmentViewModel
 import br.svcdev.nasapp.util.toast.Toast
 import kotlinx.android.synthetic.main.asteroids_fragment.*
 
-class AsteroidsFragment : Fragment() {
+class AsteroidsFragment : Fragment(), IAsteroidsRVItemClickListener {
 
     private val viewModel by lazy {
         ViewModelProvider(this).get(AsteroidsFragmentViewModel::class.java)
@@ -70,10 +72,21 @@ class AsteroidsFragment : Fragment() {
             object : IOnStartDragListener {
                 override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
                     itemTouchHelper.startDrag(viewHolder)
-                }
-            })
+                } },
+            this
+        )
         asteroid_recycler_view.adapter = adapter
         itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(adapter))
         itemTouchHelper.attachToRecyclerView(asteroid_recycler_view)
+    }
+
+    override fun onClick(s: String) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.container, WebViewFragment.newInstance("https://en.wikipedia.org/wiki/$s")
+            )
+            .addToBackStack(null)
+            .commit()
     }
 }
