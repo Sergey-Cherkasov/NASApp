@@ -1,5 +1,6 @@
 package br.svcdev.nasapp.mvvm.view.ui.fragment.bottomnavigationdrawer
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,16 @@ class BottomSheepFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+// Вариант настройки шрифта для textview заголовка и описания полученного изображения
+//        activity?.let {
+//            bottom_sheet_description_header.typeface =
+//                Typeface.createFromAsset(it.assets, "LinuxLibertineCapitalsItalic.ttf")
+//            bottom_sheet_description_header.setTypeface(bottom_sheet_description_header.typeface,
+//                Typeface.BOLD)
+//            bottom_sheet_description.typeface =
+//                Typeface.createFromAsset(it.assets, "LinuxLibertineCapitalsItalic.ttf")
+//        }
 
         when (arguments?.getInt("layoutId")) {
             R.layout.bottom_navigation_drawer_fragment ->
