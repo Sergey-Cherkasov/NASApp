@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import br.svcdev.nasapp.R
-import br.svcdev.nasapp.mvvm.view.ui.fragment.main.MainFragment
+import br.svcdev.nasapp.mvvm.view.ui.fragment.splash.SplashFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,8 +21,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
+                    .replace(R.id.container, SplashFragment())
                     .commitNow()
+//            supportFragmentManager.beginTransaction()
+//                    .replace(R.id.container, MainFragment.newInstance())
+//                    .commitNow()
         }
     }
 }
